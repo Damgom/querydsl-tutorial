@@ -12,3 +12,49 @@
 - 동적 쿼리 작성이 편리하다.
 - 쿼리 작성 시 제약 조건 등을 메서드 추출을 통해 재사용할 수 있다.
 
+<details>
+<summary>gradle 설정</summary>
+<div markdown="1">
+  <pre> 
+// 1. queryDsl version 정보 추가
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+// 2. querydsl plugins 추가
+plugins {
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+}
+//QueryDSL dependencies 추가
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+/*
+ * queryDSL 설정 추가
+ */
+// querydsl에서 사용할 경로 설정
+def querydslDir = "$buildDir/generated/querydsl"
+// JPA 사용 여부와 사용할 경로를 설정
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+// build 시 사용할 sourceSet 추가
+sourceSets {
+	main.java.srcDir querydslDir
+}
+// querydsl 컴파일시 사용할 옵션 설정
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
+}
+// querydsl 이 compileClassPath 를 상속하도록 설정
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
+}
+</pre>
+  </div>
+</details>

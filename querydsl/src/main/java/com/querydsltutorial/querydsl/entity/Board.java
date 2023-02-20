@@ -20,4 +20,9 @@ public class Board {
     Long id;
     String title;
     String content;
+
+    public Board(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
