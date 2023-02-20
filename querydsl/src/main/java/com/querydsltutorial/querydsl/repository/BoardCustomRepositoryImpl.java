@@ -32,7 +32,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository{
             return new BooleanBuilder();
         }
     }
-    
+
     BooleanBuilder titleCt(String content) {
         return nullSafeBuilder(() -> board.title.contains(content));
     }
