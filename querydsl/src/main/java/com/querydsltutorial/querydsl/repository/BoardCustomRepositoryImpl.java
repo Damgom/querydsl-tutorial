@@ -20,7 +20,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository{
     @Override
     public List<Board> search(SearchCondition condition) {
         return jpaQueryFactory.selectFrom(board)
-                .where(isSearchable(condition.getContent()))
+                .where(isSearchable(condition.getType(), condition.getContent()))
                 .orderBy(board.id.desc())
                 .fetch();
     }
@@ -41,7 +41,11 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository{
         return nullSafeBuilder(() -> board.content.contains(content));
     }
 
-    BooleanBuilder isSearchable(String content) {
-        return titleCt(content).or(contentCt(content));
+    BooleanBuilder isSearchable(SearchCondition.SearchType sType, String content) {
+        if (sType == SearchCondition.SearchType.TIT) {
+            return titleCt(content);
+        }else {
+            return titleCt(content).or(contentCt(content));
+        }
     }
 }
